@@ -80,7 +80,7 @@ jobs:
           npm run build
 
       # APP_KEY comes from a repository secret and stays stable between deploys.
-      # The psychologist's public data (CRP, WhatsApp, full name) comes from
+      # The psychologist's public data (professional registration, WhatsApp, full name) comes from
       # repository *variables*; any variable left empty falls back to the
       # default in config/site.php, so its line is simply not written.
       - name: Generate production .env
@@ -88,7 +88,7 @@ jobs:
           SECRET_APP_KEY: ${{ secrets.APP_KEY }}
           SITE_PSICOLOGO_NOME: ${{ vars.SITE_PSICOLOGO_NOME }}
           SITE_PSICOLOGO_NOME_COMPLETO: ${{ vars.SITE_PSICOLOGO_NOME_COMPLETO }}
-          SITE_PSICOLOGO_CRP: ${{ vars.SITE_PSICOLOGO_CRP }}
+          SITE_PSICOLOGO_REGISTRO: ${{ vars.SITE_PSICOLOGO_REGISTRO }}
           SITE_WHATSAPP_NUMERO: ${{ vars.SITE_WHATSAPP_NUMERO }}
         run: |
           test -n "${SECRET_APP_KEY}" || { echo "::error::APP_KEY secret is missing"; exit 1; }
@@ -123,7 +123,7 @@ jobs:
           BROADCAST_CONNECTION=log
           MAIL_MAILER=log
           EOF
-          for name in SITE_PSICOLOGO_NOME SITE_PSICOLOGO_NOME_COMPLETO SITE_PSICOLOGO_CRP SITE_WHATSAPP_NUMERO; do
+          for name in SITE_PSICOLOGO_NOME SITE_PSICOLOGO_NOME_COMPLETO SITE_PSICOLOGO_REGISTRO SITE_WHATSAPP_NUMERO; do
             value="${!name}"
             if [ -n "${value}" ]; then
               printf '%s="%s"\n' "${name}" "${value}" >> .env

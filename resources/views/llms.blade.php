@@ -2,12 +2,12 @@
 
 > {{ config('site.descricao') }}
 
-{{ config('site.nome') }} é o site do psicólogo {{ config('site.psicologo.nome_completo') }} ({{ config('site.psicologo.crp') }}), que oferece psicoterapia online em português para adultos que vivem em Portugal e no Brasil, e também para brasileiros e portugueses no exterior. O agendamento e todo o contato acontecem somente pelo WhatsApp.
+{{ config('site.nome') }} é o site do psicólogo {{ config('site.psicologo.nome_completo') }} ({{ config('site.psicologo.registro') }}), que oferece psicoterapia online em português para adultos que vivem em Portugal e no Brasil, e também para brasileiros e portugueses no exterior. O agendamento e todo o contato acontecem somente pelo WhatsApp.
 
 ## Fatos
 
 - Profissional: {{ config('site.psicologo.nome_completo') }}, psicólogo
-- Registro: {{ config('site.psicologo.crp') }} (Conselho Regional de Psicologia)
+- Registro: {{ config('site.psicologo.registro') }} ({{ config('site.psicologo.registro_entidade') }})
 - Países atendidos: Portugal e Brasil (e brasileiros e portugueses no exterior)
 - Atendimento: online, por videochamada, em português
 - Fuso horário: sessões combinadas no horário de Lisboa ou de Brasília

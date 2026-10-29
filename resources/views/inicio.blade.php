@@ -69,21 +69,29 @@
                 </div>
                 <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-[15px] text-texto-suave">
                     <li class="flex items-center gap-2"><x-icone nome="sigilo" class="size-5 text-salvia-escuro" /> Sigilo profissional</li>
-                    <li class="flex items-center gap-2"><x-icone nome="credenciado-crp" class="size-5 text-salvia-escuro" /> {{ $psicologo['crp'] }}</li>
+                    <li class="flex items-center gap-2"><x-icone nome="credenciado-crp" class="size-5 text-salvia-escuro" /> {{ $psicologo['registro'] }}</li>
                     <li class="flex items-center gap-2"><x-icone nome="atendimento-online" class="size-5 text-salvia-escuro" /> Online, de onde você estiver</li>
                 </ul>
             </div>
 
-            <div class="relative" aria-hidden="true">
-                <div class="relative aspect-[5/4] overflow-hidden rounded-marca bg-salvia">
-                    <div class="absolute -top-16 -right-16 size-64 rounded-full bg-lavanda sm:size-80"></div>
-                    <div class="absolute -bottom-20 -left-10 size-48 rounded-full bg-salvia-claro/60"></div>
-                    <img src="{{ asset('assets/marca/fcp-simbolo-branco.svg') }}" alt="" width="200" height="200" class="absolute top-1/2 left-1/2 w-[38%] -translate-x-1/2 -translate-y-1/2">
-                </div>
-                <div class="absolute -bottom-8 left-4 max-w-[78%] rounded-marca bg-white p-6 ring-1 ring-borda sm:left-8">
-                    <p class="font-display text-xl leading-8 italic text-lavanda-escuro sm:text-[22px]">“Falar é o primeiro passo para se cuidar.”</p>
-                </div>
-            </div>
+            <figure class="relative mx-auto w-full max-w-md pr-6 pb-10 lg:max-w-none lg:pr-10">
+                {{-- Blocos de cor da marca atrás da foto --}}
+                <div class="absolute top-10 right-0 bottom-0 left-10 rounded-marca bg-salvia" aria-hidden="true"></div>
+                <div class="absolute -top-4 right-2 size-28 rounded-full bg-lavanda sm:size-36" aria-hidden="true"></div>
+
+                <picture class="relative block overflow-hidden rounded-marca">
+                    <source type="image/webp" srcset="{{ asset('assets/fotos/erik-dos-santos-felizardo-480.webp') }} 480w, {{ asset('assets/fotos/erik-dos-santos-felizardo-800.webp') }} 800w, {{ asset('assets/fotos/erik-dos-santos-felizardo-1145.webp') }} 1145w" sizes="(min-width: 1024px) 520px, (min-width: 448px) 448px, 92vw">
+                    <img src="{{ asset('assets/fotos/erik-dos-santos-felizardo-800.jpg') }}" alt="Foto do psicólogo {{ $psicologo['nome_completo'] }} sorrindo, de blazer azul, em seu consultório" width="800" height="960" fetchpriority="high" class="aspect-[5/6] w-full object-cover">
+                </picture>
+
+                <figcaption class="absolute bottom-0 -left-2 flex max-w-[85%] items-center gap-4 rounded-marca bg-white p-4 pr-6 ring-1 ring-borda sm:-left-6 sm:p-5 sm:pr-7">
+                    <img src="{{ asset('assets/marca/fcp-simbolo.svg') }}" alt="" width="44" height="44" class="size-11 shrink-0">
+                    <span>
+                        <span class="block font-display text-lg leading-6 font-semibold">{{ $psicologo['nome_completo'] }}</span>
+                        <span class="mt-1 block text-sm leading-5 text-texto-suave">Psicólogo · {{ $psicologo['registro'] }}</span>
+                    </span>
+                </figcaption>
+            </figure>
         </div>
     </section>
 
@@ -168,8 +176,13 @@
         <div class="conteudo grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
             <div>
                 <p class="rotulo">Sobre</p>
-                <h2 class="titulo-secao mt-4">Olá, eu sou o {{ $psicologo['nome'] }}</h2>
-                <p class="mt-3 font-bold text-salvia-escuro">Psicólogo · {{ $psicologo['crp'] }}</p>
+                <div class="mt-4 flex items-center gap-5">
+                    <img src="{{ asset('assets/fotos/erik-dos-santos-felizardo-480.webp') }}" alt="" width="80" height="80" loading="lazy" class="size-20 shrink-0 rounded-full object-cover object-top ring-4 ring-salvia-claro">
+                    <div>
+                        <h2 class="titulo-secao">Olá, eu sou o {{ $psicologo['nome'] }}</h2>
+                        <p class="mt-1 font-bold text-salvia-escuro">Psicólogo · {{ $psicologo['registro'] }}</p>
+                    </div>
+                </div>
                 <div class="mt-6 space-y-4 text-texto-suave">
                     <p>Acredito que a terapia começa quando a pessoa se sente segura para falar. Por isso, meu trabalho é oferecer uma escuta atenta, sem julgamentos, onde você possa olhar para o que sente no seu ritmo.</p>
                     <p>Atendo adultos em Portugal e no Brasil que passam por ansiedade, tristeza, conflitos nos relacionamentos, fases de mudança ou que simplesmente querem se conhecer melhor. Muitos são brasileiros que vivem em Portugal e encontram na terapia um lugar para falar da saudade e do recomeço. Cada processo é único e construído junto com você.</p>
@@ -184,8 +197,8 @@
                 @foreach ([
                     ['acolhimento', 'Acolhimento', 'Você é recebido como é, com respeito à sua história e ao seu tempo.'],
                     ['escuta', 'Escuta atenta', 'Um espaço só seu, para falar do que importa, sem pressa.'],
-                    ['sigilo', 'Sigilo', 'O que você conta fica entre nós, como determina o Código de Ética do Psicólogo.'],
-                    ['credenciado-crp', 'Registro no CRP', 'Atendimento por psicólogo registrado no Conselho Regional de Psicologia.'],
+                    ['sigilo', 'Sigilo', 'O que você conta fica entre nós, como determina o Código Deontológico da Ordem dos Psicólogos Portugueses.'],
+                    ['credenciado-crp', 'Registro na Ordem', 'Psicólogo inscrito na '.$psicologo['registro_entidade'].': '.$psicologo['registro'].'.'],
                 ] as [$icone, $titulo, $texto])
                     <li class="rounded-marca border border-borda p-8">
                         <x-bloco-icone :nome="$icone" :tom="$loop->index" />

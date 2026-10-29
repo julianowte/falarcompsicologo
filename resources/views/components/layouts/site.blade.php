@@ -30,7 +30,7 @@
     <title>{{ $titulo }}</title>
     <meta name="description" content="{{ $descricao }}">
     <meta name="robots" content="{{ $indexar ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow' }}">
-    <meta name="author" content="Psicólogo {{ config('site.psicologo.nome_completo') }} · {{ config('site.psicologo.crp') }}">
+    <meta name="author" content="Psicólogo {{ config('site.psicologo.nome_completo') }} · {{ config('site.psicologo.registro') }}">
     @if ($canonica)
         <link rel="canonical" href="{{ $canonica }}">
     @endif
@@ -110,7 +110,7 @@
                 <p class="mt-6 max-w-sm text-[15px] leading-6">Terapia online em português para quem vive em Portugal, no Brasil ou no exterior. Um espaço seguro e sigiloso para você ser ouvido.</p>
                 <p class="mt-6 text-sm leading-[22px]">
                     <strong class="font-bold text-white">Psicólogo {{ config('site.psicologo.nome_completo') }}</strong><br>
-                    {{ config('site.psicologo.crp') }}
+                    {{ config('site.psicologo.registro') }}
                     @if (\App\Support\Site::localidade())
                         · {{ \App\Support\Site::localidade() }}
                     @endif

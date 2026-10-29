@@ -22,7 +22,7 @@
 
 <x-layouts.site
     titulo="Política de privacidade | Falar com Psicólogo"
-    descricao="Como o site Falar com Psicólogo trata seus dados: não há formulários nem cadastro, e o contato com o psicólogo Erick acontece somente pelo WhatsApp."
+    descricao="Como o site Falar com Psicólogo trata seus dados: não há formulários nem cadastro, e o contato com o psicólogo Erik acontece somente pelo WhatsApp."
     :canonica="$url"
     :grafo="$grafo"
 >
@@ -41,7 +41,7 @@
                 <p>O sigilo é a base do trabalho do psicólogo, e isso vale também para este site. Aqui explicamos, de forma simples, quais dados são tratados e como, de acordo com o Regulamento Geral sobre a Proteção de Dados (RGPD), em Portugal, e com a Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018), no Brasil.</p>
 
                 <h2>Quem é o responsável</h2>
-                <p>Psicólogo {{ config('site.psicologo.nome_completo') }}, {{ config('site.psicologo.crp') }}, responsável pelo site {{ config('site.nome') }}.</p>
+                <p>Psicólogo {{ config('site.psicologo.nome_completo') }}, {{ config('site.psicologo.registro') }}, responsável pelo site {{ config('site.nome') }}.</p>
 
                 <h2>Quais dados o site coleta</h2>
                 <p>Este site não tem formulários, cadastro nem área de login. Ele não pede nome, e-mail, telefone ou qualquer informação sobre a sua saúde.</p>
@@ -49,7 +49,7 @@
 
                 <h2>Contato pelo WhatsApp</h2>
                 <p>Ao clicar em "Conversar no WhatsApp", você sai do site e abre uma conversa no aplicativo WhatsApp, da Meta. A partir daí, valem também os termos e a política de privacidade do WhatsApp.</p>
-                <p>As mensagens trocadas são usadas apenas para agendar e conduzir o atendimento, e são tratadas com o mesmo sigilo exigido pelo Código de Ética Profissional do Psicólogo.</p>
+                <p>As mensagens trocadas são usadas apenas para agendar e conduzir o atendimento, e são tratadas com o mesmo sigilo exigido pelo Código Deontológico da Ordem dos Psicólogos Portugueses.</p>
 
                 <h2>Cookies</h2>
                 <p>O site usa apenas os cookies técnicos necessários para funcionar. Não usamos cookies de publicidade.</p>

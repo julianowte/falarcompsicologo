@@ -15,20 +15,22 @@ return [
     'nome' => 'Falar com Psicólogo',
 
     'psicologo' => [
-        'nome' => env('SITE_PSICOLOGO_NOME', 'Erick'),
-        'nome_completo' => env('SITE_PSICOLOGO_NOME_COMPLETO', 'Erick'),
-        'crp' => env('SITE_PSICOLOGO_CRP', 'CRP 00/00000'),
+        'nome' => env('SITE_PSICOLOGO_NOME', 'Erik'),
+        'nome_completo' => env('SITE_PSICOLOGO_NOME_COMPLETO', 'Erik dos Santos Felizardo'),
+        'registro' => env('SITE_PSICOLOGO_REGISTRO', 'Cédula Profissional OPP nº 32819'),
+        'registro_entidade' => 'Ordem dos Psicólogos Portugueses',
+        'registro_url' => 'https://www.ordemdospsicologos.pt',
     ],
 
     'whatsapp' => [
         'numero' => env('SITE_WHATSAPP_NUMERO', '351915679437'),
-        'mensagem' => 'Olá, Erick! Encontrei seu site e gostaria de conversar sobre atendimento.',
+        'mensagem' => 'Olá, Erik! Encontrei seu site e gostaria de conversar sobre atendimento.',
     ],
 
     'cidade' => env('SITE_CIDADE', ''),
     'estado' => env('SITE_ESTADO', ''),
 
-    'descricao' => 'Psicólogo Erick: terapia online para quem vive em Portugal, no Brasil ou no exterior, em português. Acolhimento, escuta e sigilo. Agende pelo WhatsApp.',
+    'descricao' => 'Psicólogo Erik dos Santos Felizardo: terapia online para quem vive em Portugal, no Brasil ou no exterior, em português. Acolhimento, escuta e sigilo. Agende pelo WhatsApp.',
 
     /*
     | Países atendidos: aparecem em destaque no site, no JSON-LD (areaServed) e no llms.txt.
@@ -81,7 +83,7 @@ return [
         ['pergunta' => 'Como funciona a diferença de fuso horário?', 'resposta' => 'Portugal está 3 ou 4 horas à frente de Brasília, conforme a época do ano. Os horários são sempre combinados pelo WhatsApp já no seu fuso, para não haver confusão.'],
         ['pergunta' => 'Como é a sessão online?', 'resposta' => 'A sessão acontece por videochamada, de onde você estiver. Você só precisa de internet e de um lugar reservado. O cuidado e o sigilo são os mesmos de uma sessão presencial.'],
         ['pergunta' => 'Quanto tempo dura cada sessão?', 'resposta' => 'Cada sessão dura cerca de 50 minutos. A frequência mais comum é semanal, mas ela é combinada com você.'],
-        ['pergunta' => 'O que eu falo na sessão fica em sigilo?', 'resposta' => 'Sim. O sigilo é um dever ético do psicólogo, previsto no Código de Ética Profissional do Psicólogo. O que você conta fica entre nós.'],
+        ['pergunta' => 'O que eu falo na sessão fica em sigilo?', 'resposta' => 'Sim. O sigilo é um dever ético do psicólogo, previsto no Código Deontológico da Ordem dos Psicólogos Portugueses. O que você conta fica entre nós.'],
         ['pergunta' => 'Preciso estar muito mal para procurar terapia?', 'resposta' => 'Não. A terapia ajuda em momentos difíceis, mas também é um espaço para se conhecer melhor, organizar ideias e cuidar da saúde emocional antes que o peso aumente.'],
         ['pergunta' => 'Quanto custa uma sessão e como pago?', 'resposta' => 'Os valores, em euros ou em reais, e as formas de pagamento para Portugal e para o Brasil são informados pelo WhatsApp, junto com os horários disponíveis.'],
         ['pergunta' => 'E se eu estiver em crise agora?', 'resposta' => 'Se você está em sofrimento intenso ou em risco, procure ajuda imediata. Em Portugal, ligue SNS 24 (808 24 24 24) ou, em emergência, 112. No Brasil, ligue 188 para o CVV, que atende 24 horas e de graça, ou 192 (SAMU) em emergência.'],

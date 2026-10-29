@@ -78,13 +78,18 @@ class Site
                 '@id' => $url.'#psicologo',
                 'name' => $psicologo['nome_completo'],
                 'jobTitle' => 'Psicólogo',
+                'image' => asset('assets/fotos/erik-dos-santos-felizardo-800.jpg'),
                 'url' => $url.'#sobre',
                 'worksFor' => ['@id' => $url.'#consultorio'],
                 'hasCredential' => [
                     '@type' => 'EducationalOccupationalCredential',
-                    'credentialCategory' => 'Registro profissional',
-                    'name' => $psicologo['crp'],
-                    'recognizedBy' => ['@type' => 'Organization', 'name' => 'Conselho Regional de Psicologia'],
+                    'credentialCategory' => 'Cédula profissional',
+                    'name' => $psicologo['registro'],
+                    'recognizedBy' => [
+                        '@type' => 'Organization',
+                        'name' => $psicologo['registro_entidade'],
+                        'url' => $psicologo['registro_url'],
+                    ],
                 ],
             ],
         ];

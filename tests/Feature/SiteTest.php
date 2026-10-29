@@ -28,14 +28,14 @@ class SiteTest extends TestCase
             ->assertSee('aria-label="Conversar com o psicólogo', false)
             ->assertSee('assets/assinatura/wte-assinatura-escura.svg', false)
             ->assertSee('href="https://wte.com.br"', false)
-            ->assertSee(config('site.psicologo.crp'));
+            ->assertSee(config('site.psicologo.registro'));
     }
 
     public function test_pagina_inicial_destaca_atendimento_em_portugal_e_no_brasil(): void
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('<title>Psicólogo Erick · Terapia online em Portugal e no Brasil', false)
+            ->assertSee('<title>Psicólogo Erik · Terapia online em Portugal e no Brasil', false)
             ->assertSee('"areaServed":[{"@type":"Country","name":"Portugal"},{"@type":"Country","name":"Brasil"}]', false)
             ->assertSee('<meta property="og:locale:alternate" content="pt_BR">', false)
             ->assertSee('Para quem vive em Portugal')
