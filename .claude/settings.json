@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL https://wte.com.br)",
+      "Bash(curl -sL https://wte.com.br/llms.txt)",
+      "Bash(curl -sI https://wte.com.br/nao-existe)"
+    ]
+  }
+}

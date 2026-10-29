@@ -1,0 +1,252 @@
+name: Deploy - Falar com Psicologo
+
+# Every push to main runs the tests and, if they pass, deploys to the cPanel VPS.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+# APP_DIR: Laravel lives OUTSIDE the document root (never inside public_html).
+# WEB_DIR: document root of falarcompsicologo.com.br; receives only public/ files.
+env:
+  APP_DIR: ~/app_falarcompsico
+  WEB_DIR: ~/public_html
+  SITE_DOMAIN: falarcompsicologo.com.br
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, pdo_sqlite, zip
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist
+          npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Run tests
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan test --compact
+
+  deploy:
+    name: Build & Deploy to cPanel
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, zip
+          coverage: none
+
+      - name: Composer install (production, no dev packages)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Build Vite assets
+        run: |
+          npm ci
+          npm run build
+
+      # APP_KEY comes from a repository secret and stays stable between deploys.
+      # The psychologist's public data (CRP, WhatsApp, full name) comes from
+      # repository *variables*; any variable left empty falls back to the
+      # default in config/site.php, so its line is simply not written.
+      - name: Generate production .env
+        env:
+          SECRET_APP_KEY: ${{ secrets.APP_KEY }}
+          SITE_PSICOLOGO_NOME: ${{ vars.SITE_PSICOLOGO_NOME }}
+          SITE_PSICOLOGO_NOME_COMPLETO: ${{ vars.SITE_PSICOLOGO_NOME_COMPLETO }}
+          SITE_PSICOLOGO_CRP: ${{ vars.SITE_PSICOLOGO_CRP }}
+          SITE_WHATSAPP_NUMERO: ${{ vars.SITE_WHATSAPP_NUMERO }}
+        run: |
+          test -n "${SECRET_APP_KEY}" || { echo "::error::APP_KEY secret is missing"; exit 1; }
+          cat > .env <<EOF
+          APP_NAME="Falar com Psicólogo"
+          APP_ENV=production
+          APP_KEY=${SECRET_APP_KEY}
+          APP_DEBUG=false
+          APP_URL=https://${SITE_DOMAIN}
+
+          APP_LOCALE=pt_BR
+          APP_FALLBACK_LOCALE=pt_BR
+          APP_FAKER_LOCALE=pt_BR
+          APP_MAINTENANCE_DRIVER=file
+
+          LOG_CHANNEL=stack
+          LOG_STACK=daily
+          LOG_LEVEL=error
+
+          DB_CONNECTION=sqlite
+
+          SESSION_DRIVER=file
+          SESSION_LIFETIME=120
+          SESSION_ENCRYPT=false
+          SESSION_SECURE_COOKIE=true
+          SESSION_HTTP_ONLY=true
+          SESSION_SAME_SITE=lax
+
+          CACHE_STORE=file
+          QUEUE_CONNECTION=sync
+          FILESYSTEM_DISK=local
+          BROADCAST_CONNECTION=log
+          MAIL_MAILER=log
+          EOF
+          for name in SITE_PSICOLOGO_NOME SITE_PSICOLOGO_NOME_COMPLETO SITE_PSICOLOGO_CRP SITE_WHATSAPP_NUMERO; do
+            value="${!name}"
+            if [ -n "${value}" ]; then
+              printf '%s="%s"\n' "${name}" "${value}" >> .env
+            fi
+          done
+
+      # The server runs Imunify360, which may greylist datacenter IPs (GitHub
+      # runners live on Azure). Print the runner IP so it can be checked or
+      # whitelisted in WHM > Imunify360 > Firewall if the connection is refused.
+      - name: Runner public IP
+        run: echo "Runner IP => $(curl -s https://api.ipify.org)"
+
+      # No ssh-keyscan: an unauthenticated probe can be flagged by the firewall.
+      # ControlMaster keeps ONE authenticated connection shared by every step.
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat > ~/.ssh/config <<EOF
+          Host prod
+            HostName ${{ secrets.SSH_CPANEL_IP }}
+            Port ${{ secrets.SSH_PORT }}
+            User ${{ secrets.SSH_CPANEL_USER_NAME }}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+            ConnectTimeout 20
+            ServerAliveInterval 15
+            ControlMaster auto
+            ControlPath ~/.ssh/cm-%r@%h-%p
+            ControlPersist 15m
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Open SSH connection (with retries)
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if ssh -fN prod; then
+              echo "Connected on attempt ${attempt}"
+              exit 0
+            fi
+            wait=$((attempt * 20))
+            echo "Attempt ${attempt} failed, retrying in ${wait}s..."
+            sleep "${wait}"
+          done
+          echo "::error::SSH refused. The runner IP (see previous step) is probably blocked by Imunify360 on the server."
+          exit 1
+
+      # Every ssh/rsync below reuses the connection opened above.
+      - name: Prepare server (directories + maintenance mode)
+        run: |
+          ssh prod "mkdir -p ${{ env.APP_DIR }}/storage/app/public \
+                     ${{ env.APP_DIR }}/storage/framework/cache/data \
+                     ${{ env.APP_DIR }}/storage/framework/sessions \
+                     ${{ env.APP_DIR }}/storage/framework/views \
+                     ${{ env.APP_DIR }}/storage/logs \
+                     ${{ env.APP_DIR }}/bootstrap/cache && \
+                    (cd ${{ env.APP_DIR }} && test -f artisan && php artisan down --retry=15 || true)"
+
+      # Whole Laravel app to APP_DIR. Runtime folders are never overwritten.
+      # bootstrap/cache is excluded: caches built on the runner hold runner paths.
+      - name: Sync application
+        run: |
+          rsync -az --delete \
+            --exclude='.git' --exclude='.github' --exclude='.ai' --exclude='.claude' \
+            --exclude='node_modules' --exclude='tests' \
+            --exclude='AGENTS.md' --exclude='CLAUDE.md' --exclude='boost.json' --exclude='.mcp.json' \
+            --exclude='public/hot' \
+            --exclude='storage/app' --exclude='storage/framework' --exclude='storage/logs' \
+            --exclude='bootstrap/cache/*.php' \
+            ./ prod:${{ env.APP_DIR }}/
+
+      # public/ -> public_html/. Never deletes what cPanel owns: .well-known
+      # (AutoSSL validation), cgi-bin and the MultiPHP php.ini/.user.ini.
+      # .htaccess is rebuilt as Laravel's rules + the cPanel-generated blocks
+      # (PHP handler and ini directives) already on the server, so changing the
+      # PHP version in cPanel keeps working across deploys.
+      - name: Publish public files and warm caches
+        run: |
+          ssh prod "rsync -a --delete \
+                      --exclude='/.well-known' --exclude='/cgi-bin' --exclude='/index.php' \
+                      --exclude='/.htaccess' --exclude='/php.ini' --exclude='/.user.ini' \
+                      ${{ env.APP_DIR }}/public/ ${{ env.WEB_DIR }}/ && \
+                    { cat ${{ env.APP_DIR }}/public/.htaccess; echo; \
+                      sed -n '/# BEGIN cPanel-generated php ini directives/,/# END cPanel-generated php ini directives/p; /# php -- BEGIN cPanel-generated handler/,/# php -- END cPanel-generated handler/p' ${{ env.WEB_DIR }}/.htaccess 2>/dev/null; \
+                    } > ${{ env.WEB_DIR }}/.htaccess.new && \
+                    mv ${{ env.WEB_DIR }}/.htaccess.new ${{ env.WEB_DIR }}/.htaccess && \
+                    cp ${{ env.APP_DIR }}/deploy/public-index.php ${{ env.WEB_DIR }}/index.php && \
+                    chmod 644 ${{ env.WEB_DIR }}/index.php ${{ env.WEB_DIR }}/.htaccess && \
+                    chmod 600 ${{ env.APP_DIR }}/.env && \
+                    cd ${{ env.APP_DIR }} && \
+                    php artisan optimize:clear && \
+                    php artisan optimize && \
+                    php artisan up && \
+                    echo 'Deploy concluido com sucesso!'"
+
+      # Hits the server directly (--resolve), so it works before the domain's DNS
+      # points to the VPS. -k accepts the self-signed certificate used until
+      # AutoSSL can issue a real one (which needs the DNS in place).
+      - name: Smoke test
+        run: |
+          sleep 3
+          check() {
+            code=$(curl -sk -o /dev/null -w '%{http_code}' \
+              --resolve "${SITE_DOMAIN}:443:${{ secrets.SSH_CPANEL_IP }}" \
+              "https://${SITE_DOMAIN}$1")
+            echo "$1 -> ${code} (expected $2)"
+            test "${code}" = "$2"
+          }
+          check / 200
+          check /politica-de-privacidade 200
+          check /sitemap.xml 200
+          check /robots.txt 200
+          check /llms.txt 200
+          check /favicon.ico 200
+          check /android-icon-512x512.png 200
+          check /pagina-que-nao-existe 404
+
+      - name: Bring site back up on failure
+        if: failure()
+        run: ssh prod "cd ${{ env.APP_DIR }} && test -f artisan && php artisan up" || true
+
+      - name: Close SSH connection
+        if: always()
+        run: ssh -O exit prod 2>/dev/null || true

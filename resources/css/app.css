@@ -1,9 +1,98 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* Fontes da marca, servidas pelo próprio site (sem requisição ao Google Fonts) */
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/fraunces-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 500; font-display: swap; src: url('/assets/fonts/fraunces-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 600; font-display: swap; src: url('/assets/fonts/fraunces-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 400; font-display: swap; src: url('/assets/fonts/fraunces-latin-400-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/nunito-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 600; font-display: swap; src: url('/assets/fonts/nunito-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 700; font-display: swap; src: url('/assets/fonts/nunito-latin-700-normal.woff2') format('woff2'); }
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-salvia: #a8cbb8;
+    --color-salvia-escuro: #3d6b5a;
+    --color-salvia-claro: #e3efe8;
+    --color-lavanda: #cdbfe8;
+    --color-lavanda-escuro: #6b5a9c;
+    --color-lavanda-claro: #eee8f7;
+    --color-pessego: #f6d2bc;
+    --color-pessego-claro: #fbe9de;
+    --color-terracota: #9a5b3b;
+    --color-creme: #fbf6ef;
+    --color-borda: #e8e1d6;
+    --color-tinta: #2e3a40;
+    --color-texto-suave: #5e6b70;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+
+    --radius-marca: 24px;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 6rem;
+    }
+
+    body {
+        @apply bg-creme font-sans text-[17px] leading-7 text-tinta antialiased;
+    }
+
+    :focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--color-lavanda-escuro);
+        border-radius: 6px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+}
+
+@layer components {
+    .rotulo {
+        @apply text-[13px] leading-4 font-bold tracking-[0.1em] uppercase text-salvia-escuro;
+    }
+
+    .titulo-secao {
+        @apply font-display text-[28px] leading-9 font-medium text-balance sm:text-[32px] sm:leading-10;
+    }
+
+    .corpo-grande {
+        @apply text-lg leading-[30px] text-texto-suave sm:text-[19px];
+    }
+
+    .botao-whatsapp {
+        @apply inline-flex items-center justify-center gap-2 rounded-full bg-salvia-escuro px-6 py-4 text-base leading-5 font-bold text-white transition-colors hover:bg-[#335b4c];
+    }
+
+    .secao {
+        @apply py-[72px] lg:py-28;
+    }
+
+    .conteudo {
+        @apply mx-auto max-w-6xl px-4 sm:px-6;
+    }
+
+    .texto-legal h2 {
+        @apply mt-10 font-display text-2xl leading-8 font-medium;
+    }
+
+    .texto-legal p,
+    .texto-legal ul {
+        @apply mt-4 text-texto-suave;
+    }
+
+    .texto-legal ul {
+        @apply list-disc space-y-2 pl-6;
+    }
+
+    .texto-legal a {
+        @apply font-semibold text-salvia-escuro underline underline-offset-4;
+    }
 }
