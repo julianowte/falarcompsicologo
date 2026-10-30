@@ -46,15 +46,7 @@
     <section class="pt-12 pb-[72px] sm:pt-16 lg:pt-20 lg:pb-28">
         <div class="conteudo grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
             <div>
-                <ul class="flex flex-wrap gap-2" aria-label="Países atendidos">
-                    @foreach (config('site.paises') as $pais)
-                        <li class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold ring-1 ring-borda">
-                            <x-icone nome="localizacao" class="size-4 text-salvia-escuro" />
-                            {{ $pais['nome'] }}
-                        </li>
-                    @endforeach
-                </ul>
-                <p class="rotulo mt-6">{{ $psicologo['titulo'] }} · Portugal e Brasil</p>
+                <p class="rotulo">{{ $psicologo['titulo'] }} · Atendimento em português, sem fronteiras</p>
                 <h1 class="mt-5 font-display text-[34px] leading-10 font-medium tracking-[-0.01em] text-balance sm:text-5xl sm:leading-[54px] lg:text-[52px] lg:leading-[58px]">
                     Você não precisa passar por isso <em class="font-normal text-salvia-escuro">sozinho</em>.
                 </h1>
