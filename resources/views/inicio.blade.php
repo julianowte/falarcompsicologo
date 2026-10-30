@@ -59,7 +59,10 @@
                     Você não precisa passar por isso <em class="font-normal text-salvia-escuro">sozinho</em>.
                 </h1>
                 <p class="corpo-grande mt-6 max-w-xl">
-                    Sou o {{ $psicologo['nome'] }}, psicólogo e neuropsicólogo. Acompanho pessoas de diferentes idades em <strong class="font-bold text-tinta">Portugal</strong> e no <strong class="font-bold text-tinta">Brasil</strong>, online ou presencialmente, num espaço seguro e sigiloso.
+                    Sou {{ $psicologo['nome'] }}, psicólogo e neuropsicólogo. Acompanho pessoas de diferentes idades, oferecendo atendimento psicológico <strong class="font-bold text-tinta">online</strong> para brasileiros, portugueses e todos os falantes da língua portuguesa, onde quer que estejam no mundo.
+                </p>
+                <p class="corpo-grande mt-4 max-w-xl">
+                    Também realizo atendimentos <strong class="font-bold text-tinta">presenciais em Portugal</strong>, sempre em um espaço seguro, acolhedor e sigiloso.
                 </p>
                 <div class="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
                     <x-botao-whatsapp />
@@ -157,8 +160,9 @@
                 @endforeach
                 <article class="rounded-marca bg-white p-8 sm:p-10">
                     <x-bloco-icone nome="atendimento-online" :tom="0" />
-                    <h3 class="mt-6 font-display text-[22px] leading-[30px] font-semibold">Brasileiros e portugueses no exterior</h3>
-                    <p class="mt-3 text-texto-suave">Mora em outro país? A sessão por videochamada leva a terapia até você, na sua língua, com o mesmo cuidado e o mesmo sigilo.</p>
+                    <h3 class="mt-6 font-display text-[22px] leading-[30px] font-semibold">Psicoterapia em português, sem fronteiras</h3>
+                    <p class="mt-3 text-texto-suave">A terapia pode chegar até você, onde quer que esteja. Por videochamada, ofereço acompanhamento psicológico na sua língua materna, com o mesmo cuidado, acolhimento e sigilo de um atendimento presencial.</p>
+                    <p class="mt-3 text-texto-suave">Porque estar longe de casa não significa precisar enfrentar tudo sozinho.</p>
                 </article>
             </div>
             <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-[15px] text-texto-suave">
