@@ -14,7 +14,7 @@ class SiteTest extends TestCase
             ->assertSee('<html lang="pt">', false)
             ->assertSee('<link rel="canonical" href="'.route('inicio').'">', false)
             ->assertSee('<meta name="description"', false)
-            ->assertSee('<meta property="og:image" content="'.asset('android-icon-512x512.png').'">', false)
+            ->assertSee('<meta property="og:image" content="'.asset('android-icon-192x192.png').'">', false)
             ->assertSee('<meta name="twitter:card" content="summary">', false)
             ->assertSee('"@type":"FAQPage"', false)
             ->assertSee('"@type":"ProfessionalService"', false);
@@ -35,7 +35,7 @@ class SiteTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('<title>Psicólogo Erik · Terapia online em Portugal e no Brasil', false)
+            ->assertSee('<title>Erik Felizardo · Psicólogo e Neuropsicólogo em Portugal e no Brasil</title>', false)
             ->assertSee('"areaServed":[{"@type":"Country","name":"Portugal"},{"@type":"Country","name":"Brasil"}]', false)
             ->assertSee('<meta property="og:locale:alternate" content="pt_BR">', false)
             ->assertSee('Para quem vive em Portugal')

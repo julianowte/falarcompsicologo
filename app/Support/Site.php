@@ -50,8 +50,8 @@ class Site
                 'availableLanguage' => ['pt-PT', 'pt-BR'],
                 'areaServed' => collect(config('site.paises'))->pluck('codigo')->all(),
             ],
-            'knowsAbout' => collect(config('site.temas'))->pluck('titulo')->all(),
-            'serviceType' => ['Psicoterapia online', 'Terapia online para brasileiros em Portugal', 'Terapia online em português'],
+            'knowsAbout' => $psicologo['areas'],
+            'serviceType' => ['Psicoterapia', 'Terapia Cognitivo-Comportamental', 'Avaliação neuropsicológica', 'Intervenção no neurodesenvolvimento', 'Terapia online em português'],
         ];
 
         if (self::localidade() !== '') {
@@ -77,19 +77,40 @@ class Site
                 '@type' => 'Person',
                 '@id' => $url.'#psicologo',
                 'name' => $psicologo['nome_completo'],
-                'jobTitle' => 'Psicólogo',
+                'alternateName' => $psicologo['nome_publico'],
+                'jobTitle' => $psicologo['titulo'],
                 'image' => asset('assets/fotos/erik-dos-santos-felizardo-800.jpg'),
-                'url' => $url.'#sobre',
+                'url' => route('paginas.quem-e-erik-felizardo-psicologo-em-portugal-e-brasil'),
                 'worksFor' => ['@id' => $url.'#consultorio'],
+                'knowsAbout' => $psicologo['areas'],
+                'knowsLanguage' => ['pt-PT', 'pt-BR'],
+                'memberOf' => [
+                    '@type' => 'Organization',
+                    'name' => $psicologo['registro_entidade'],
+                    'url' => $psicologo['registro_url'],
+                ],
+                'alumniOf' => collect($psicologo['formacao'])->map(fn (array $formacao) => [
+                    '@type' => 'CollegeOrUniversity',
+                    'name' => $formacao['instituicao'],
+                    'address' => ['@type' => 'PostalAddress', 'addressCountry' => $formacao['pais']],
+                ])->all(),
                 'hasCredential' => [
-                    '@type' => 'EducationalOccupationalCredential',
-                    'credentialCategory' => 'Cédula profissional',
-                    'name' => $psicologo['registro'],
-                    'recognizedBy' => [
-                        '@type' => 'Organization',
-                        'name' => $psicologo['registro_entidade'],
-                        'url' => $psicologo['registro_url'],
+                    [
+                        '@type' => 'EducationalOccupationalCredential',
+                        'credentialCategory' => 'Cédula profissional',
+                        'name' => $psicologo['registro'],
+                        'recognizedBy' => [
+                            '@type' => 'Organization',
+                            'name' => $psicologo['registro_entidade'],
+                            'url' => $psicologo['registro_url'],
+                        ],
                     ],
+                    ...collect($psicologo['formacao'])->map(fn (array $formacao) => [
+                        '@type' => 'EducationalOccupationalCredential',
+                        'credentialCategory' => 'degree',
+                        'name' => $formacao['curso'],
+                        'recognizedBy' => ['@type' => 'CollegeOrUniversity', 'name' => $formacao['instituicao']],
+                    ])->all(),
                 ],
             ],
         ];

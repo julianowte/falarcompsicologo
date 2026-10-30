@@ -11,10 +11,12 @@ class SitemapController extends Controller
      */
     public function __invoke(): Response
     {
-        $paginas = [
-            ['url' => route('inicio'), 'atualizado_em' => config('site.atualizado_em')],
-            ['url' => route('privacidade'), 'atualizado_em' => config('site.atualizado_em')],
-        ];
+        $atualizadoEm = config('site.atualizado_em');
+
+        $paginas = collect(['inicio', 'privacidade'])
+            ->merge(collect(config('paginas'))->keys()->map(fn (string $slug) => 'paginas.'.$slug))
+            ->map(fn (string $rota) => ['url' => route($rota), 'atualizado_em' => $atualizadoEm])
+            ->all();
 
         return response()
             ->view('sitemap', ['paginas' => $paginas])

@@ -79,6 +79,76 @@
         @apply mx-auto max-w-6xl px-4 sm:px-6;
     }
 
+    /* Texto corrido das páginas de conteúdo */
+    .texto-artigo {
+        @apply text-[17px] leading-[30px] text-tinta/90;
+    }
+
+    .texto-artigo > :first-child {
+        @apply mt-0;
+    }
+
+    .texto-artigo h2 {
+        @apply mt-14 font-display text-[26px] leading-[34px] font-medium text-balance text-tinta sm:text-[28px] sm:leading-9;
+    }
+
+    .texto-artigo h3 {
+        @apply mt-9 font-display text-xl leading-7 font-semibold text-tinta;
+    }
+
+    .texto-artigo p {
+        @apply mt-5;
+    }
+
+    .texto-artigo ul,
+    .texto-artigo ol {
+        @apply mt-5 space-y-2.5 pl-6;
+    }
+
+    .texto-artigo ul {
+        @apply list-disc marker:text-salvia-escuro;
+    }
+
+    .texto-artigo ol {
+        @apply list-decimal marker:font-bold marker:text-salvia-escuro;
+    }
+
+    .texto-artigo strong {
+        @apply font-bold text-tinta;
+    }
+
+    .texto-artigo a {
+        @apply font-semibold text-salvia-escuro underline decoration-salvia underline-offset-4 hover:decoration-salvia-escuro;
+    }
+
+    .texto-artigo .destaque {
+        @apply mt-8 rounded-marca bg-lavanda-claro p-6 sm:p-8;
+    }
+
+    .texto-artigo .destaque > :first-child {
+        @apply mt-0;
+    }
+
+    .texto-artigo blockquote {
+        @apply mt-8 border-l-4 border-lavanda pl-6 font-display text-xl leading-8 italic text-lavanda-escuro;
+    }
+
+    .texto-artigo table {
+        @apply w-full border-collapse text-left text-base leading-6;
+    }
+
+    .texto-artigo .tabela {
+        @apply mt-6 overflow-x-auto rounded-marca border border-borda;
+    }
+
+    .texto-artigo th {
+        @apply bg-salvia-claro px-5 py-3 font-bold text-tinta;
+    }
+
+    .texto-artigo td {
+        @apply border-t border-borda px-5 py-3 align-top;
+    }
+
     .texto-legal h2 {
         @apply mt-10 font-display text-2xl leading-8 font-medium;
     }
